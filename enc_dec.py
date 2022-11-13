@@ -4,6 +4,7 @@ import rsa
 import base64
 
 # TODO
+# 0. retourner des bytes
 # 1. Fixer le bug des messages trop longs
 # 2. Truc d'alex (Signature / Verification)
 

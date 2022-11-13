@@ -3,6 +3,10 @@
 import rsa
 import base64
 
+# TODO
+# 1. Fixer le bug des messages trop longs
+# 2. Truc d'alex (Signature / Verification)
+
 def gen_cles():
   (cle_pub, cle_pri) = rsa.newkeys(1024)
   return (cle_pub, cle_pri)

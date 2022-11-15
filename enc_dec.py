@@ -3,7 +3,7 @@
 import rsa
 
 # TODO
-# 0. retourner des bytes
+# 0. retourner des bytes ''DONE''
 # 1. Fixer le bug des messages trop longs
 # 2. Truc d'alex (Signature / Verification)
 

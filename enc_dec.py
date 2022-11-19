@@ -8,7 +8,9 @@ import rsa
 # 2. Truc d'alex (Signature / Verification)
 
 def gen_cles():
-  (cle_pub, cle_pri) = rsa.newkeys(1024)
+  (cle_pub, cle_pri) = rsa.newkeys(2048)
+  # la valeur de newkeys est une puissance de 2
+  # la taille du message ne doit pas excéder newkeys/8 - 11 bits ; ici 245 bits
   return (cle_pub, cle_pri)
 
 def encryption(message, cle_pub):

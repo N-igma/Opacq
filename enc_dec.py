@@ -4,16 +4,11 @@ import rsa
 import base64
 
 key_length = 2048
-# la valeur de newkeys est une puissance de 2
+# la valeur de key_length est une puissance de 2
 # la taille du message ne doit pas excéder key_length/8 - 11 bits
 
 # Taille max d'encryption: n/8 - 11
 # Taille de chaque encryption: n/8
-
-# TODO
-# 0. retourner des bytes ''DONE''
-# 1. Fixer le bug des messages trop longs
-# 2. Truc d'alex (Signature / Verification)
 
 def gen_cles():
   (cle_pub, cle_pri) = rsa.newkeys(key_length)

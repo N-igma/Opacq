@@ -3,7 +3,7 @@
 import rsa
 import base64
 
-key_length = 2048
+key_length = 1024
 # la valeur de key_length est une puissance de 2
 # la taille du message ne doit pas excéder key_length/8 - 11 bits
 
@@ -27,13 +27,26 @@ def encryption(message, cle_pub):
     encrypted.append(rsa.encrypt(chunk, cle_pub))
   return b''.join(encrypted)
 
+def sign(message,cle_pri):
+  signature = rsa.sign(message, cle_pri, 'SHA-256')
+  signmess = [message, signature]
+  return signmess
+
 def decryption(encrypt, cle_pri):
   decrypted = []
   for chunk in taille(encrypt, key_length // 8):
     decrypted.append(rsa.decrypt(chunk, cle_pri))
   return b''.join(decrypted).decode('utf8')
 
+def verif(signmess, cle_pub):
+  return rsa.verify(signmess[0], signmess[1], cle_pub)
+
 if __name__ == '__main__':
   (cle_pub, cle_pri) = gen_cles()
-  print(base64.b64encode(encryption(input(), cle_pub)).decode('ascii'))
-  print(decryption(base64.b64decode(input()), cle_pri))
+  message_original, signature_original = sign(base64.b64encode(encryption(input(), cle_pub)),cle_pri)
+  print(message_original, base64.b64encode(signature_original).decode('ascii'))
+  mess = input("message : ").encode('utf-8')
+  signatur = base64.b64decode(input("signature : ").encode('ascii'))
+  print(verif([mess,signatur], cle_pub))
+  if verif([mess,signatur], cle_pub) == 'SHA-256':
+      print(decryption(base64.b64decode(mess), cle_pri))

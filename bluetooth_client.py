@@ -1,15 +1,15 @@
 # Bluetooth: Eloan 
 #hciconfig  = pour récup l'adresse mac
 
-importation prise
+import socket
 
-serverMACAddress = '00: 1f: e1: dd: 08: 3d '
+serverMACAddress = '1c:1b:b5:4b:de:fc'
 Port = 3
-s = prise.prise(prise.AF_BLUETOOTH, prise.SOCK_STREAM, prise.BTPROTO_RFCOMM)
-s.relier((serverMACAddress,Port))
-tandis que 1:
-    texte = contribution()
-    si texte == "quitter":
-        Pause
-    s.envoyer(octets(texte, 'UTF-8'))
-s.proche()
+s = socket.socket(socket.AF_BLUETOOTH, socket.SOCK_STREAM, socket.BTPROTO_RFCOMM)
+s.connect((serverMACAddress,Port))
+while 1:
+    texte = input()
+    if texte == "quitter":
+        break
+    s.send(bytes(texte, 'UTF-8'))
+s.close()

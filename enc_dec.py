@@ -27,11 +27,17 @@ def encryption(message, cle_pub):
     encrypted.append(rsa.encrypt(chunk, cle_pub))
   return b''.join(encrypted)
 
+def sign(message,cle_pri):
+  signature = rsa.sign(message, cle_pri, 'SHA-1')
+
 def decryption(encrypt, cle_pri):
   decrypted = []
   for chunk in taille(encrypt, key_length // 8):
     decrypted.append(rsa.decrypt(chunk, cle_pri))
   return b''.join(decrypted).decode('utf8')
+
+def verif(message, signature, cle_pub):
+  rsa.verify(message, signature, cle_pub)
 
 if __name__ == '__main__':
   (cle_pub, cle_pri) = gen_cles()

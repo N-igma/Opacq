@@ -1,5 +1,3 @@
-# echo-client.py
-
 import socket
 
 HOST = "192.168.0.24"  # The server's hostname or IP address

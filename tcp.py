@@ -15,10 +15,11 @@ if __name__ == '__main__':
 
   date_of_birth = four_bytes_time()
   who_am_i = socket.gethostbyname(socket.getfqdn())
+  my_fingerprint = merge_sender_dob(who_am_i, date_of_birth)
   sender_fingerprints = {}
   authorized_fingerprints = []
-  sender_fingerprints[who_am_i] = merge_sender_dob(who_am_i, date_of_birth)
-  authorized_fingerprints.append(sender_fingerprints)
+  sender_fingerprints[who_am_i] = my_fingerprint
+  authorized_fingerprints.append(my_fingerprint)
 
   print(sender_fingerprints)
 

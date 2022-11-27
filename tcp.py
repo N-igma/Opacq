@@ -17,8 +17,8 @@ if __name__ == '__main__':
   who_am_i = socket.gethostbyname(socket.getfqdn())
   sender_fingerprints = {}
   authorized_fingerprints = []
-  # sender_fingerprints[who_am_i] = merge_sender_dob(who_am_i, date_of_birth)
-  # authorized_fingerprints.push(sender_fingerprints)
+  sender_fingerprints[who_am_i] = merge_sender_dob(who_am_i, date_of_birth)
+  authorized_fingerprints.append(sender_fingerprints)
 
   print(sender_fingerprints)
 
@@ -45,7 +45,7 @@ if __name__ == '__main__':
 
   def onserverconn(conn):
     print('Server Conn Received')
-    conn.sendall(b'')
+    conn.sendall(b'Hello world!')
   def onservermsg(conn, msg):
     print('Server Message Received', msg)
   start_server(onconn=onserverconn, onmessage=onservermsg)

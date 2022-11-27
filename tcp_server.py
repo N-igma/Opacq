@@ -6,7 +6,6 @@ def recvall(sock):
   data = b''
   while True:
     part = sock.recv(BUFF_SIZE)
-    print(part)
     data += part
     if len(part) < BUFF_SIZE:
       # either 0 or end of data

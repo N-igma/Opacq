@@ -17,30 +17,25 @@ if __name__ == '__main__':
   who_am_i = socket.gethostbyname(socket.getfqdn())
   my_fingerprint = merge_sender_dob(who_am_i, date_of_birth)
   sender_fingerprints = {}
-  authorized_fingerprints = []
   sender_fingerprints[who_am_i] = my_fingerprint
-  authorized_fingerprints.append(my_fingerprint)
+
+  known_fingerprints = []
+  known_fingerprints.append(my_fingerprint)
 
   print(sender_fingerprints)
 
   def on_broadcast(content, sender):
     current_fingerprint = merge_sender_dob(sender[0], content)
-    if not current_fingerprint in authorized_fingerprints:
-      time_by_recv = [
-        four_bytes_time(-1),
-        four_bytes_time(),
-        four_bytes_time(1)
-      ]
-      if content in time_by_recv:
-        authorized_fingerprints.append(current_fingerprint)
-        sender_fingerprints[sender[0]] = current_fingerprint
-        print(sender_fingerprints)
+    if not current_fingerprint in known_fingerprints:
+      known_fingerprints.append(current_fingerprint)
+      sender_fingerprints[sender[0]] = current_fingerprint
+      print(sender_fingerprints)
 
-        def onclientconn(conn):
-          print('Client Conn Received')
-        def onclientmsg(conn, msg):
-          print('Client Message Received', msg)
-        start_client(sender[0], onclientconn, onclientmsg)
+      def onclientconn(conn):
+        print('Client Conn Received')
+      def onclientmsg(conn, msg):
+        print('Client Message Received', msg)
+      start_client(sender[0], onclientconn, onclientmsg)
 
   listen_for_broadcasts(on_broadcast)
 

@@ -23,11 +23,11 @@ class ServerThread(threading.Thread):
     self.onmessage = onmessage
 
   def run(self):
-    cs = socket(AF_INET, SOCK_STREAM)
-    cs.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
-    cs.bind((self.host, self.port))
-    cs.listen(1)
     while True:
+      cs = socket(AF_INET, SOCK_STREAM)
+      cs.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
+      cs.bind((self.host, self.port))
+      cs.listen(1)
       conn, address = cs.accept()
       with conn:
         self.onconn(conn)

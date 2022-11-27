@@ -2,7 +2,7 @@ from socket import *
 import threading
 
 def recvall(sock):
-  BUFF_SIZE = 32
+  BUFF_SIZE = 4096
   data = b''
   while True:
     part = sock.recv(BUFF_SIZE)
@@ -44,12 +44,24 @@ class ServerConnectionThread(threading.Thread):
   def run(self):
     while True:
       buff = recvall(self.conn)
-      if not buff:
-        break
       message = buff.decode('utf-8')
+      if message == '':
+        break
       self.onmessage(self.conn, message)
     self.conn.close()
 
 def start_server(onconn, onmessage):
   server = ServerThread(host='0.0.0.0', port=9375, onconn=onconn, onmessage=onmessage)
   server.start()
+
+if __name__ == '__main__':
+  import time
+
+  def onserverconn(conn):
+    print('Server Conn Received', conn)
+    conn.sendall(b'Hi!')
+    time.sleep(5)
+    conn.close()
+  def onservermsg(conn, msg):
+    print('Server Message Received', conn, msg)
+  start_server(onconn=onserverconn, onmessage=onservermsg)

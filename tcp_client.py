@@ -22,7 +22,7 @@ class ClientThread(threading.Thread):
 
   def run(self):
     with socket(AF_INET, SOCK_STREAM) as s:
-      s.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
+      # s.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
       s.connect((self.host, self.port))
       self.onconn(s, self.host)
       while True:
@@ -32,6 +32,7 @@ class ClientThread(threading.Thread):
           print('Closing', self.host)
           break
         self.onmessage(s, message)
+      s.shutdown(SHUT_RDWR)
       s.close()
 
 def start_client(host, onconn, onmessage):
@@ -39,8 +40,8 @@ def start_client(host, onconn, onmessage):
   client.start()
 
 if __name__ == '__main__':
-  def onclientconn(conn):
-    print('Client Conn Received')
+  def onclientconn(conn, addr):
+    print('Client Conn Received', addr)
   def onclientmsg(conn, msg):
     print('Client Message Received', msg)
   start_client('127.0.0.1', onclientconn, onclientmsg)

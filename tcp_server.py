@@ -48,6 +48,7 @@ class ServerConnectionThread(threading.Thread):
         print('Closing', self.addr)
         break
       self.onmessage(self.conn, message)
+    self.conn.shutdown(SHUT_RDWR)
     self.conn.close()
 
 def start_server(onconn, onmessage):
@@ -57,11 +58,9 @@ def start_server(onconn, onmessage):
 if __name__ == '__main__':
   import time
 
-  def onserverconn(conn):
-    print('Server Conn Received', conn)
+  def onserverconn(conn, addr):
+    print('Server Conn Received', addr)
     conn.sendall(b'Hi!')
-    time.sleep(5)
-    conn.close()
   def onservermsg(conn, msg):
-    print('Server Message Received', conn, msg)
+    print('Server Message Received', msg)
   start_server(onconn=onserverconn, onmessage=onservermsg)

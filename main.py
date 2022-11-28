@@ -39,6 +39,7 @@ def on_broadcast(content, sender):
       send_to[sender_fingerprints[addr]] = lambda s: conn.sendall(s.encode('utf8'))
     def onclientmsg(conn, msg):
       print('Message Received', msg)
+      conn.sendall('ACK')
     start_client(sender[0], onclientconn, onclientmsg)
 
 listen_for_broadcasts(on_broadcast)

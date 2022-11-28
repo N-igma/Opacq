@@ -2,8 +2,6 @@ from socket import *
 import time
 import threading
 
-obj = {}
-
 def recvall(sock):
   BUFF_SIZE = 32
   data = b''

@@ -24,11 +24,12 @@ class ClientThread(threading.Thread):
     with socket(AF_INET, SOCK_STREAM) as s:
       s.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
       s.connect((self.host, self.port))
-      self.onconn(s)
+      self.onconn(s, self.host)
       while True:
         buff = recvall(s)
         message = buff.decode('utf-8')
         if message == '':
+          print('Closing', self.host)
           break
         self.onmessage(s, message)
       s.close()

@@ -6,6 +6,7 @@ def recvall(sock):
   data = b''
   while True:
     part = sock.recv(BUFF_SIZE)
+    print(part)
     data += part
     if len(part) < BUFF_SIZE:
       # either 0 or end of data
@@ -30,26 +31,12 @@ class ServerThread(threading.Thread):
       conn, address = cs.accept()
       with conn:
         self.onconn(conn, address[0])
-        newthread = ServerConnectionThread(conn=conn, addr=address, onmessage=self.onmessage)
-        newthread.start()
-
-class ServerConnectionThread(threading.Thread):
-  def __init__(self, conn, addr, onmessage):
-    threading.Thread.__init__(self)
-    self.conn = conn
-    self.addr = addr
-    self.onmessage = onmessage
-
-  def run(self):
-    while True:
-      buff = recvall(self.conn)
-      message = buff.decode('utf-8')
-      if message == '':
-        print('Closing', self.addr)
-        break
-      self.onmessage(self.conn, message)
-    self.conn.shutdown(SHUT_RDWR)
-    self.conn.close()
+        buff = recvall(conn)
+        if not buff:
+          return
+        message = buff.decode('utf-8')
+        self.onmessage(conn, message)
+        conn.sendall(f"{message}".encode('utf-8'))
 
 def start_server(onconn, onmessage):
   server = ServerThread(host='0.0.0.0', port=9375, onconn=onconn, onmessage=onmessage)
@@ -60,7 +47,8 @@ if __name__ == '__main__':
 
   def onserverconn(conn, addr):
     print('Server Conn Received', addr)
-    conn.sendall(b'Hi!')
+    #while True:
+    #  conn.send(input().encode('utf-8'))
   def onservermsg(conn, msg):
     print('Server Message Received', msg)
   start_server(onconn=onserverconn, onmessage=onservermsg)

@@ -34,7 +34,7 @@ class ServerThread(threading.Thread):
         if not buff:
           return
         message = buff.decode('utf-8')
-        self.onmessage(conn, message)
+        self.onmessage(conn, address[0], message)
         conn.sendall(f"{message}".encode('utf-8'))
 
 def start_server(onconn, onmessage):
@@ -48,6 +48,6 @@ if __name__ == '__main__':
     print('Server Conn Received', addr)
     #while True:
     #  conn.send(input().encode('utf-8'))
-  def onservermsg(conn, msg):
+  def onservermsg(conn, addr, msg):
     print('Server Message Received', msg)
   start_server(onconn=onserverconn, onmessage=onservermsg)

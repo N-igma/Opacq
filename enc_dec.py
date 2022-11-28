@@ -29,7 +29,7 @@ def encryption(message, cle_pub):
 
 def sign(message,cle_pri):
   signature = rsa.sign(message, cle_pri, 'SHA-256')
-  signmess = [message, signature]
+  signmess = signature
   return signmess
 
 def decryption(encrypt, cle_pri):
@@ -38,8 +38,8 @@ def decryption(encrypt, cle_pri):
     decrypted.append(rsa.decrypt(chunk, cle_pri))
   return b''.join(decrypted).decode('utf8')
 
-def verif(signmess, cle_pub):
-  return rsa.verify(signmess[0], signmess[1], cle_pub)
+def verif(message, signature, cle_pub):
+  return rsa.verify(message, signature, cle_pub)
 
 if __name__ == '__main__':
   (cle_pub, cle_pri) = gen_cles()

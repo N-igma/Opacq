@@ -29,7 +29,7 @@ class ServerThread(threading.Thread):
       cs.listen(1)
       conn, address = cs.accept()
       with conn:
-        self.onconn(conn)
+        self.onconn(conn, address[0])
         newthread = ServerConnectionThread(conn=conn, addr=address, onmessage=self.onmessage)
         newthread.start()
 
@@ -45,6 +45,7 @@ class ServerConnectionThread(threading.Thread):
       buff = recvall(self.conn)
       message = buff.decode('utf-8')
       if message == '':
+        print('Closing', self.addr)
         break
       self.onmessage(self.conn, message)
     self.conn.close()

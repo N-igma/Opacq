@@ -1,6 +1,6 @@
-from tcp_broadcast import broadcast_existence, listen_for_broadcasts
-from tcp_client import start_client
-from tcp_server import start_server
+from tcp.broadcast import broadcast_existence, listen_for_broadcasts
+from tcp.client import start_client
+from tcp.server import start_server
 
 if __name__ == '__main__':
   import time

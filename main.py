@@ -14,8 +14,8 @@ who_am_i = socket.gethostbyname(socket.getfqdn())
 my_fingerprint = merge_sender_entropy(who_am_i, entropy)
 sender_fingerprints = {}
 
-sender_fingerprints[who_am_i] = my_fingerprint
-known_fingerprints = [my_fingerprint]
+#sender_fingerprints[who_am_i] = my_fingerprint
+known_fingerprints = []
 
 print(sender_fingerprints)
 
@@ -33,14 +33,13 @@ def on_broadcast(content, sender):
       int(current_fingerprint, 16) < int(my_fingerprint, 16)
     )
 
-
-    def onclientconn(conn, addr):
-      #print(addr)
-      send_to[sender_fingerprints[addr]] = lambda s: conn.sendall(s.encode('utf8'))
-    def onclientmsg(conn, msg):
-      print('Message Received', msg)
-      conn.sendall('ACK')
-    start_client(sender[0], onclientconn, onclientmsg)
+    def create_socket(addr, data):
+      print(addr)
+      def send_data(conn, addr):
+        conn.sendall(data.encode('utf8'))
+      start_client(addr, send_data)
+    send_to[sender_fingerprints[sender[0]]] = lambda x:create_socket(sender[0], x)
+    
 
 listen_for_broadcasts(on_broadcast)
 

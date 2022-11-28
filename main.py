@@ -43,8 +43,8 @@ def on_broadcast(content, sender):
 
 listen_for_broadcasts(on_broadcast)
 
-def onserverconn(conn):
-  print('New server conn!')
+def onserverconn(conn, addr):
+  print('New server conn!', addr)
 def onservermsg(conn, msg):
   print('New server msg!', msg)
 

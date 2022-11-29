@@ -1,4 +1,3 @@
-import sys
 from socket import *
 import threading
 
@@ -39,10 +38,11 @@ class ServerThread(threading.Thread):
           self.onmessage(conn, address[0], message)
           conn.sendall(f"{message}".encode('utf-8'))
       except:
-        sys.exit(1)
+        quit(1)
 
 def start_server(onconn, onmessage):
   server = ServerThread(host='0.0.0.0', port=9375, onconn=onconn, onmessage=onmessage)
+  server.daemon = True
   server.start()
 
 if __name__ == '__main__':

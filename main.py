@@ -1,5 +1,6 @@
 # Integration: Jerome
 import os
+import sys
 import socket
 import hashlib
 import json
@@ -35,7 +36,9 @@ def on_broadcast(content, sender):
       "id": current_fingerprint,
       "pfp": pfp,
       "name": name,
+      "me": my_fingerprint == current_fingerprint
     }))
+    sys.stdout.flush()
 
     def create_socket(addr, data):
       def send_data(conn, addr):
@@ -75,6 +78,7 @@ def onservermsg(conn, addr, msg):
           "type": "NEW_MESSAGE",
           "content": content
         }))
+        sys.stdout.flush()
 
 start_server(onserverconn, onservermsg)
 broadcast_existence(entropy)

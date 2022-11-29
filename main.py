@@ -31,6 +31,9 @@ def on_broadcast(content, sender):
     known_fingerprints.append(current_fingerprint)
     sender_fingerprints[sender[0]] = current_fingerprint
     (pfp, name) = pick_emoji_name_set_seed(random, current_fingerprint)
+
+    print(my_fingerprint, current_fingerprint, who_am_i)
+
     print(json.dumps({
       "type": "NEW_MEMBER",
       "id": current_fingerprint,
@@ -78,6 +81,7 @@ def onservermsg(conn, addr, msg):
           "type": "NEW_MESSAGE",
           "content": content,
           "channel": sender_fingerprints[addr],
+          "from": sender_fingerprints[addr],
           "fromMe": False,
         }))
         sys.stdout.flush()
@@ -94,6 +98,7 @@ while True:
         "type": "NEW_MESSAGE",
         "content": content,
         "channel": command["to"],
+        "from": my_fingerprint,
         "fromMe": True,
       }))
       sys.stdout.flush()

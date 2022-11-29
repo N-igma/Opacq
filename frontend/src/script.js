@@ -223,10 +223,10 @@ function addUser(id, isMe) {
   }
 }
 
-function createMessage(id, sender, content) {
+function createMessage(channelId, sender, senderId, content) {
   document
-    .querySelector(`.frame[data-id="${id}"] .chats`)
-    .prepend(components.chat(sender, content, users[id].pfp));
+    .querySelector(`.frame[data-id="${channelId}"] .chats`)
+    .prepend(components.chat(sender, content, users[senderId].pfp));
 }
 
 require('electron').ipcRenderer.on('command_to_renderer', (event, message) => {
@@ -240,7 +240,7 @@ require('electron').ipcRenderer.on('command_to_renderer', (event, message) => {
       addUser(message.id, message.me);
       break;
     case 'NEW_MESSAGE':
-      createMessage(message.channel, message.fromMe ? 'me' : 'you', message.content);
+      createMessage(message.channel, message.fromMe ? 'me' : 'you', message.from, message.content);
       break;
   }
 });

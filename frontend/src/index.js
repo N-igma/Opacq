@@ -1,4 +1,4 @@
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, ipcMain } = require('electron');
 const { join } = require('path');
 const { PythonShell } = require('python-shell');
 const path = require('path');
@@ -35,8 +35,13 @@ const createWindow = () => {
     pyshell.on('message', function (message) {
       const command = JSON.parse(message)
       console.log(command)
-      mainWindow.webContents.send(command.type, command)
+      mainWindow.webContents.send('command_to_renderer', command);
     });
+
+    ipcMain.on('command_to_main', (event, message) => {
+      console.log(message);
+      pyshell.send(JSON.stringify(message));
+    })
   })
 };
 

@@ -76,7 +76,9 @@ def onservermsg(conn, addr, msg):
         content = decryption(content_encrypted, keypairs[sender_fingerprints[addr]][1])
         print(json.dumps({
           "type": "NEW_MESSAGE",
-          "content": content
+          "content": content,
+          "channel": sender_fingerprints[addr],
+          "fromMe": False,
         }))
         sys.stdout.flush()
 
@@ -88,6 +90,13 @@ while True:
   match command["type"]:
     case 'SEND_MESSAGE':
       content = command["content"]
+      print(json.dumps({
+        "type": "NEW_MESSAGE",
+        "content": content,
+        "channel": command["to"],
+        "fromMe": True,
+      }))
+      sys.stdout.flush()
       content_encrypted = encryption(content, keypairs[command["to"]][0])
       content_signature = sign(content_encrypted, keypairs[command["to"]][1])
 

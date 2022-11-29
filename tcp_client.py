@@ -32,6 +32,7 @@ class ClientThread(threading.Thread):
 
 def start_client(host, onconn):
   client = ClientThread(host=host, port=9375, onconn=onconn)
+  client.daemon = True
   client.start()
 
 if __name__ == '__main__':

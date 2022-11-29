@@ -8,13 +8,16 @@ if (require('electron-squirrel-startup')) {
   app.quit();
 }
 
+let pyshell;
+
 const createWindow = () => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 800,
     height: 600,
     webPreferences: {
-      preload: path.join(__dirname, 'preload.js'),
+      nodeIntegration: true,
+      contextIsolation: false,
     },
   });
 
@@ -24,14 +27,17 @@ const createWindow = () => {
   mainWindow.removeMenu();
 
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools();
+  mainWindow.webContents.openDevTools();
 
-  let pyshell = new PythonShell(path.join(__dirname, '../../main.py'));
+  mainWindow.webContents.on('did-finish-load', () => {
+    pyshell = new PythonShell(path.join(__dirname, '../../main.py'));
 
-  pyshell.on('message', function (message) {
-    // received a message sent from the Python script (a simple "print" statement)
-    console.log(message);
-  });
+    pyshell.on('message', function (message) {
+      const command = JSON.parse(message)
+      console.log(command)
+      mainWindow.webContents.send(command.type, command)
+    });
+  })
 };
 
 // This method will be called when Electron has finished
@@ -45,6 +51,7 @@ app.on('ready', createWindow);
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit();
+    pyshell.kill();
   }
 });
 

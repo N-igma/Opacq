@@ -30,6 +30,7 @@ class PingerThread (threading.Thread):
 
 def broadcast_existence(fingerprint):
   a = PingerThread(port=9375, fingerprint=fingerprint)
+  a.daemon = True
   a.start()
 
 class ListenerThread (threading.Thread):
@@ -44,7 +45,6 @@ class ListenerThread (threading.Thread):
       cs.bind(('255.255.255.255', self.port))
     except:
       cs.close()
-      raise
 
     while True:
       data, sender = cs.recvfrom(4)
@@ -52,4 +52,5 @@ class ListenerThread (threading.Thread):
 
 def listen_for_broadcasts(onmessage):
   a = ListenerThread(port=9375, onmessage=onmessage)
+  a.daemon = True
   a.start()

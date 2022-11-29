@@ -36,9 +36,9 @@ function calculateRelativeDate(date) {
 }
 
 const components = {
-  memberCard(id, name, pfp) {
+  memberCard(id, name, pfp, isMe) {
     const cardElm = document.createElement('div');
-    cardElm.classList.add('member_card', 'you');
+    cardElm.classList.add('member_card', isMe ? 'surface' : 'you');
     cardElm.onclick = (event) => createTab(id, name, pfp);
 
       const pfpElm = document.createElement('div');
@@ -204,8 +204,26 @@ function createTab(id) {
   switchToTab(id);
 }
 
+function addUser(id, isMe) {
+  if (isMe) {
+    document.querySelector('.who_am_i')
+      .append(components.memberCard(id, users[id].name, users[id].pfp, true));
+  } else {
+    document.querySelector('.member_panel')
+      .append(components.memberCard(id, users[id].name, users[id].pfp, false));
+  }
+}
+
 function createMessage(id, sender, content) {
   document
     .querySelector(`.frame[data-id="${id}"] .chats`)
     .prepend(components.chat(sender, content, users[id].pfp));
 }
+
+require('electron').ipcRenderer.on('NEW_MEMBER', (event, message) => {
+  users[message.id] = {
+    name: message.name,
+    pfp: message.pfp,
+  };
+  addUser(message.id, message.me);
+})

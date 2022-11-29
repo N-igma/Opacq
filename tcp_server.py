@@ -1,3 +1,4 @@
+import sys
 from socket import *
 import threading
 
@@ -25,17 +26,20 @@ class ServerThread(threading.Thread):
     while True:
       cs = socket(AF_INET, SOCK_STREAM)
       cs.setsockopt(SOL_SOCKET, SO_REUSEADDR, 1)
-      cs.bind((self.host, self.port))
-      cs.listen(1)
-      conn, address = cs.accept()
-      with conn:
-        self.onconn(conn, address[0])
-        buff = recvall(conn)
-        if not buff:
-          return
-        message = buff.decode('utf-8')
-        self.onmessage(conn, address[0], message)
-        conn.sendall(f"{message}".encode('utf-8'))
+      try:
+        cs.bind((self.host, self.port))
+        cs.listen(1)
+        conn, address = cs.accept()
+        with conn:
+          self.onconn(conn, address[0])
+          buff = recvall(conn)
+          if not buff:
+            return
+          message = buff.decode('utf-8')
+          self.onmessage(conn, address[0], message)
+          conn.sendall(f"{message}".encode('utf-8'))
+      except:
+        sys.exit(1)
 
 def start_server(onconn, onmessage):
   server = ServerThread(host='0.0.0.0', port=9375, onconn=onconn, onmessage=onmessage)

@@ -26,8 +26,10 @@ const createWindow = () => {
 
   mainWindow.removeMenu();
 
+  mainWindow.setIcon(path.join(__dirname, 'icon.png'));
+
   // Open the DevTools.
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
 
   mainWindow.webContents.on('did-finish-load', () => {
     pyshell = new PythonShell(path.join(__dirname, '../../main.py'));

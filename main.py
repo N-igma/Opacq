@@ -18,7 +18,12 @@ def merge_sender_entropy(sender, entropy):
   return (hashlib.sha256((f"{sender}+{entropy}").encode('utf-8')).hexdigest())[0:6]
 
 entropy = os.urandom(4)
-who_am_i = socket.gethostbyname(socket.getfqdn())
+
+s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+s.connect(("8.8.8.8", 80))
+who_am_i = s.getsockname()[0]
+s.close()
+
 my_fingerprint = merge_sender_entropy(who_am_i, entropy)
 sender_fingerprints = {}
 

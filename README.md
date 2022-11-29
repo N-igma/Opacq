@@ -28,3 +28,5 @@ https://nodejs.org/en/
 
 - Lancer le programme
 (Le premier demarrage peut etre lent)
+Linux, MacOS: `./start.sh`
+Windows: `./start.bat`

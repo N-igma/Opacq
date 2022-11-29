@@ -19,10 +19,11 @@ def merge_sender_entropy(sender, entropy):
 
 entropy = os.urandom(4)
 
-s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-s.connect(("8.8.8.8", 80))
-who_am_i = s.getsockname()[0]
-s.close()
+sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+sock.connect(('1.1.1.1', 9000))  # IP and port are arbitrary
+who_am_i = sock.getsockname()[0]  # returns (hostaddr, port)
+sock.shutdown(socket.SHUT_RDWR)
+sock.close()
 
 my_fingerprint = merge_sender_entropy(who_am_i, entropy)
 sender_fingerprints = {}

@@ -106,6 +106,15 @@ const components = {
           const inputContentElm = document.createElement('pre');
           inputContentElm.classList.add('scrollbar');
           inputContentElm.contentEditable = true;
+          /* inputContentElm.onkeydown = () => {
+            inputContentElm.innerHTML = inputContentElm.textContent
+          } */
+
+          inputSendElm.onclick = () => {
+            message = inputContentElm.textContent;
+            inputContentElm.textContent = '';
+            require('electron').ipcRenderer.send('command_to_main', { type: 'SEND_MESSAGE', to: id, content: message });
+          }
 
         inputContainerElm.append(inputSendElm, inputContentElm);
 
@@ -220,10 +229,18 @@ function createMessage(id, sender, content) {
     .prepend(components.chat(sender, content, users[id].pfp));
 }
 
-require('electron').ipcRenderer.on('NEW_MEMBER', (event, message) => {
-  users[message.id] = {
-    name: message.name,
-    pfp: message.pfp,
-  };
-  addUser(message.id, message.me);
-})
+require('electron').ipcRenderer.on('command_to_renderer', (event, message) => {
+  switch (message.type) {
+    case 'NEW_MEMBER':
+      users[message.id] = {
+        name: message.name,
+        pfp: message.pfp,
+        isMe: message.me,
+      };
+      addUser(message.id, message.me);
+      break;
+    case 'NEW_MESSAGE':
+      createMessage(message.channel, message.fromMe ? 'me' : 'you', message.content);
+      break;
+  }
+});

@@ -1,5 +1,5 @@
 cd frontend
-if exist yourfoldername\ (
+if exist node_modules\ (
   echo Exists
 ) else (
   npm i

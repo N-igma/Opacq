@@ -1,6 +1,6 @@
 # Opacq
 
-Une messagerie communiquant par le Bluetooth.
+Une messagerie communiquant par le protocole TCP/IP.
 
 ## Fonctionalites
 

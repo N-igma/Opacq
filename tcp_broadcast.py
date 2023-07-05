@@ -42,9 +42,10 @@ class ListenerThread (threading.Thread):
   def run (self):
     cs = socket(AF_INET, SOCK_DGRAM)
     try:
-      cs.bind(('255.255.255.255', self.port))
-    except:
+      cs.bind(('', self.port))
+    except Exception as e:
       cs.close()
+      raise e
 
     while True:
       data, sender = cs.recvfrom(4)

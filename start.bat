@@ -1,7 +1,7 @@
+@echo off
+setlocal
 cd frontend
-if exist node_modules\ (
-  echo Exists
-) else (
+if not exist node_modules\ (
   npm i
 )
-npm run start
+npm run --silent start
